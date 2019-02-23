@@ -7,6 +7,7 @@ defmodule Discuss.AuthController do
     def callback(%{assigns: %{ueberauth_auth: auth}} = conn, params) do
         user_params = %{token: auth.credentials.token, email: auth.info.email, provider: "github"}
         changeset = User.changeset(%User{}, user_params)
+        # require IEx; IEx.pry
         signin(conn, changeset)
     end
     
@@ -19,6 +20,7 @@ defmodule Discuss.AuthController do
     defp signin(conn, changeset) do
         case insert_or_update_user(changeset) do
             {:ok, user} -> 
+                
                 conn
                 |> put_flash(:info, "Welcome back")
                 |> put_session(:user_id, user.id)
